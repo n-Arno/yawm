@@ -46,6 +46,8 @@ config_tmpl = """[Interface]
 Address = {{ node.address }}
 PrivateKey = {{ node.private }}
 ListenPort = 52435
+PostUp = sysctl -w net.ipv4.ip_forward=1
+PreDown = sysctl -w net.ipv4.ip_forward=0
 {% for peer in peers %}
 [Peer]
 Endpoint = {{ peer.ip }}:52435
@@ -119,7 +121,7 @@ This tool can be used in a Cloud-Init script during a Terraform execution to:
 - get the config and install/start Wireguard
 """
 
-app = FastAPI(lifespan=lifespan, title="yawm", description=description, version="1.0.0")
+app = FastAPI(lifespan=lifespan, title="yawm", description=description, version="1.0.1")
 app.router.route_class = CustomRoute
 
 
